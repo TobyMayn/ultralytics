@@ -13,7 +13,11 @@ from ultralytics.yolo.utils.tal import dist2bbox, make_anchors
 
 from .block import DFL, Proto
 from .conv import Conv
-from .transformer import MLP, DeformableTransformerDecoder, DeformableTransformerDecoderLayer
+from .transformer import (
+    MLP,
+    DeformableTransformerDecoder,
+    DeformableTransformerDecoderLayer,
+)
 from .utils import bias_init_with_prob, linear_init_
 
 __all__ = 'Detect', 'Segment', 'Pose', 'Classify', 'RTDETRDecoder'
@@ -89,12 +93,14 @@ class Segment(Detect):
         """Return model outputs and mask coefficients if training, otherwise return outputs and mask coefficients."""
         p = self.proto(x[0])  # mask protos
         bs = p.shape[0]  # batch size
+        ms_feats = x
+        x = x[:3]
 
         mc = torch.cat([self.cv4[i](x[i]).view(bs, self.nm, -1) for i in range(self.nl)], 2)  # mask coefficients
         x = self.detect(self, x)
         if self.training:
             return x, mc, p
-        return (torch.cat([x, mc], 1), p) if self.export else (torch.cat([x[0], mc], 1), (x[1], mc, p))
+        return (torch.cat([x, mc], 1), p) if self.export else (torch.cat([x[0], mc], 1), (x[1], mc, p), ms_feats)
 
 
 class Pose(Detect):
