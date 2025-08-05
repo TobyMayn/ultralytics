@@ -1,3 +1,6 @@
+!! Note: This project has been forked and changed in order to be compatible with the [SAM-CD](https://github.com/DingLei14/SAM-CD/) project, as it requires changes in ultralytics source files to work. 
+This edit creates a more usable solution, as this project can simply be imported via your requirements.txt file. Not requiring you to edit source files after import. !!
+
 <div align="center">
   <p>
     <a href="https://ultralytics.com/yolov8" target="_blank">
